@@ -1,0 +1,78 @@
+---
+title: "Problem Set 1"
+format: html
+---
+
+```{r setup-analysis}
+
+#| echo: false
+#| message: false
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(forcats)
+```
+```{r load-processed}
+# Load processed data
+df <- read_csv("data/mtcars_clean.csv")
+df |> head()
+
+```
+Bar plots are useful when you want compare frequency counts of categorical data or groups. For the following bar chat, it indicates the frequency count of a particular car make (categorical variable).
+```{r}
+
+bar_plot_v1 <- df |>
+  count(make) |>
+  mutate(make = fct_reorder(make, n)) |>
+  ggplot(aes(x = make, y = n)) +
+  geom_bar(stat = "identity", fill = "red", color = "black") + #colour bars
+  coord_flip() +
+  theme_minimal() +
+    labs(
+    title = " Frequency Distribution of Car Makes in the mtcars Dataset",
+    x = NULL,
+    y = "Number of Cars"
+    ) +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5)) #center title
+                     
+bar_plot_v1
+
+```
+Scatter plots have a number of uses depending on the reserach question. They are best used when you want to compare the relationship between variables, change over time, or when the distribution of individual data points within groups is important. For this example, the scatter plot shows the relationship of mpg and horsepower. In other words, it depicts how miles per gallon changes as a function of horsepower.
+```{r}
+
+scatter_plot_v1 <- df |>
+  ggplot(aes(x = hp, y = mpg)) +
+  #Add trend line
+  geom_smooth(method = "lm", color = "BlacK", se = TRUE) + #add trend line
+  geom_point(shape = 21, fill = "red", color = "black", size = 3, stroke = 1) + #colour points
+  labs(
+    title = "The Relationship Between Horsepower and Miles Per Gallon",
+    x = "HP (Horsepower)",
+    y = "MPG (Miles Per Gallon)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) #Center Title
+  
+  
+scatter_plot_v1
+
+```
+Histograms are often used to the frequency of a range of data when the distribution is meaningful. This is often done to examine data for normality and to determine the skewness or kutosis of data. In the following example, The histogram shows the counts of cars that have a particular mile per gallon rating.
+```{r}
+
+histogram_v1 <- df |>
+  ggplot(aes(x = mpg)) +
+  geom_histogram(binwidth = 5, fill = "red", color = "black") + #colour bars and adjust binwidth
+  labs(
+    title = "Histogram of MPG",
+    x = "MPG (Miles Per Gallon)",
+    y = "Count of Cars"
+  ) +
+  theme_minimal() +
+  theme (plot.title = element_text(hjust = 0.5)) #center title
+
+histogram_v1
+
+```
